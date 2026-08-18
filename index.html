@@ -6,11 +6,11 @@
 <!-- SWAP: remove the noindex line when the Cal.com and WhatsApp CTAs below are live -->
 <meta name="robots" content="noindex">
 <title>The £200 Website | Synth Studio</title>
-<meta name="description" content="A proper website, built and live in one day, for £200. See two we made earlier, then book a 15 minute call.">
+<meta name="description" content="A proper website, built and live in one day, for £200. See three we made earlier, then book a 15 minute call.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Synth Studio">
 <meta property="og:title" content="The £200 Website | Synth Studio">
-<meta property="og:description" content="A proper website, built and live in one day, for £200. See two we made earlier, then book a 15 minute call.">
+<meta property="og:description" content="A proper website, built and live in one day, for £200. See three we made earlier, then book a 15 minute call.">
 <meta property="og:url" content="https://ezcb4.github.io/synth-200/">
 <meta property="og:image" content="https://ezcb4.github.io/synth-200/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -18,6 +18,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ezcb4.github.io/synth-200/assets/og-image.jpg">
 <meta name="theme-color" content="#0a0812">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/fonts-inline.css">
 <style>
   :root{
@@ -26,26 +28,49 @@
     --ink:#ece8f6; --dim:#9d94b8; --line:rgba(255,255,255,.10);
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;
+    background:
+      radial-gradient(130% 80% at 50% -10%, #171129 0%, transparent 55%),
+      radial-gradient(120% 80% at 50% 112%, #0c1230 0%, transparent 55%),
+      #08060f}
   body{
     font-family:"General Sans",-apple-system,system-ui,sans-serif;
-    background:var(--bg); color:var(--ink);
+    background:transparent; color:var(--ink);
     -webkit-font-smoothing:antialiased; line-height:1.6;
   }
   h1,h2,h3{font-family:"Clash Display",sans-serif;font-weight:600;letter-spacing:-.01em;line-height:1.08}
   a{color:inherit;text-decoration:none}
   img,video{max-width:100%;display:block}
+  img{height:auto}
   .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
   .glow{position:absolute;border-radius:50%;opacity:.55;pointer-events:none}
 
   /* top bar */
   .bar{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
-  .wordmark{font-family:"Clash Display",sans-serif;font-weight:600;letter-spacing:.30em;font-size:13px}
+  .lockup{display:inline-flex;align-items:center;gap:11px}
+  .lockup img{width:38px;height:38px}
+  .lockup span{font-family:"Clash Display",sans-serif;font-weight:600;font-size:16.5px;letter-spacing:.005em;color:#fff;line-height:1;white-space:nowrap}
   .pill{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--lavender);
         border:1px solid rgba(139,108,255,.4);border-radius:999px;padding:7px 14px}
 
   /* hero */
-  .hero{position:relative;overflow:hidden;padding:72px 0 84px;text-align:left}
+  .hero{position:relative;overflow:hidden;padding:56px 0 84px;text-align:left}
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center}
+  .stack{position:relative;height:470px}
+  .shot{position:absolute;border-radius:12px;overflow:hidden;background:var(--bg-soft);border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.5)}
+  .shot img{width:100%;display:block}
+  .shot.s1{width:64%;top:0;left:0;transform:rotate(-3.5deg);z-index:1}
+  .shot.s2{width:58%;top:24%;right:0;transform:rotate(2.5deg);z-index:2}
+  .shot.s3{width:62%;bottom:0;left:7%;transform:rotate(-1.5deg);z-index:3}
+  .chrome{display:flex;align-items:center;gap:9px;height:34px;padding:0 12px;background:#0d0a1a;border-bottom:1px solid var(--line);flex-shrink:0}
+  .dots{display:inline-flex;gap:6px}
+  .dots i{width:9px;height:9px;border-radius:50%;background:#ff5f57}
+  .dots i:nth-child(2){background:#febc2e}
+  .dots i:nth-child(3){background:#28c840}
+  .chrome .url{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:7px;padding:4px 11px;font-size:11px;color:var(--dim);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shot .chrome{height:28px;padding:0 10px}
+  .shot .chrome .url{font-size:9.5px;padding:3px 9px}
+  .shot .dots i{width:7px;height:7px}
   .eyebrow{font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;color:var(--lavender);margin-bottom:22px}
   .price-line{display:flex;align-items:baseline;gap:26px;flex-wrap:wrap}
   .was{font-family:"Clash Display",sans-serif;font-weight:600;font-size:clamp(2.4rem,6vw,4.4rem);color:var(--dim);position:relative}
@@ -72,11 +97,8 @@
   /* cards */
   .card{display:grid;grid-template-columns:1.15fr 1fr;gap:0;background:var(--bg-soft);border:1px solid var(--line);
         border-radius:20px;overflow:hidden;margin-bottom:26px}
-  .card .media{position:relative;min-height:340px;background:#000}
-  .card .media video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-  .pan{position:absolute;inset:0;overflow:hidden}
-  .pan img{width:100%;height:auto;animation:panScroll 26s linear infinite alternate;will-change:transform}
-  @keyframes panScroll{from{transform:translateY(0)}to{transform:translateY(calc(-100% + 340px))}}
+  .card .media{display:flex;flex-direction:column;min-height:340px;background:#000}
+  .card .media video{width:100%;flex:1;min-height:0;object-fit:cover}
   .card .body{padding:38px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
   .tag{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--lavender)}
   .card h3{font-size:1.55rem}
@@ -113,13 +135,16 @@
 
   @media (max-width:860px){
     .card{grid-template-columns:1fr}
-    .card .media{min-height:300px}
+    .card .media{min-height:280px}
     .steps{grid-template-columns:1fr}
     .ticks{grid-template-columns:1fr}
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .stack{height:auto;margin-top:4px}
+    .shot{position:static;transform:none!important;width:100%!important}
+    .shot.s2,.shot.s3{display:none}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
-    .pan img{animation:none}
     .btn{transition:none}
   }
 </style>
@@ -127,7 +152,10 @@
 <body>
 
 <div class="wrap bar">
-  <div class="wordmark">SYNTH STUDIO</div>
+  <div class="lockup">
+    <img src="assets/synth-mascot-head.png" alt="" width="38" height="38">
+    <span>The Synth Studio</span>
+  </div>
   <div class="pill">August price</div>
 </div>
 
@@ -135,19 +163,28 @@
   <div class="glow" style="width:420px;height:420px;background:radial-gradient(closest-side, rgba(61,42,143,.85), transparent 72%);top:-140px;right:-100px"></div>
   <div class="glow" style="width:300px;height:300px;background:radial-gradient(closest-side, rgba(29,47,110,.85), transparent 72%);bottom:-120px;left:-80px"></div>
   <div class="wrap" style="position:relative">
-    <div class="eyebrow">Website in a day</div>
-    <h1>The £200 website, built in one day</h1>
-    <div class="price-line" aria-hidden="true">
-      <span class="was">£2,400</span>
-      <span class="now">£200<span class="dot">.</span></span>
-    </div>
-    <p class="sub">Same website. One day. Live by tonight.</p>
-    <p class="note">Agencies quote thousands and take six weeks. We build your site in a single day, properly: designed for your trade, written for your customers, wired to your WhatsApp. <b>The £200 price ends in September.</b></p>
-    <div class="cta-row">
-      <!-- SWAP: replace #book with the live Cal.com booking link (prefill supported; see LAUNCH.md) -->
-      <a class="btn" href="#book">Book a 15 minute call</a>
-      <!-- SWAP: replace #whatsapp with the Synth WhatsApp wa.me link -->
-      <a class="btn ghost" href="#whatsapp">WhatsApp us</a>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Website in a day</div>
+        <h1>The £200 website, built in one day</h1>
+        <div class="price-line" aria-hidden="true">
+          <span class="was">£2,400</span>
+          <span class="now">£200<span class="dot">.</span></span>
+        </div>
+        <p class="sub">Same website. One day. Live by tonight.</p>
+        <p class="note">Agencies quote thousands and take six weeks. We build your site in a single day, properly: designed for your trade, written for your customers, wired to your WhatsApp. <b>The £200 price ends in September.</b></p>
+        <div class="cta-row">
+          <!-- SWAP: replace #book with the live Cal.com booking link (prefill supported; see LAUNCH.md) -->
+          <a class="btn" href="#book">Book a 15 minute call</a>
+          <!-- SWAP: replace #whatsapp with the Synth WhatsApp wa.me link -->
+          <a class="btn ghost" href="#whatsapp">WhatsApp us</a>
+        </div>
+      </div>
+      <div class="stack" aria-hidden="true">
+        <div class="shot s1"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/fairlinemedia</span></div><img src="assets/thumb_fairline.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
+        <div class="shot s2"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/redrose</span></div><img src="assets/thumb_redrose.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
+        <div class="shot s3"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/copperstone</span></div><img src="assets/thumb_copperstone.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
+      </div>
     </div>
   </div>
 </header>
@@ -155,13 +192,14 @@
 <section>
   <div class="wrap">
     <div class="sec-head">
-      <h2>Here is one we made earlier. Two, actually.</h2>
-      <p>Real builds you can open and scroll right now. One is a demonstration for a fictional company, clearly labelled. One is live client work.</p>
+      <h2>Here is one we made earlier. Three, actually.</h2>
+      <p>Real websites you can open and scroll right now. Two are demonstrations for fictional companies, clearly labelled. One is live client work.</p>
     </div>
 
     <div class="card">
       <div class="media">
-        <video autoplay muted loop playsinline preload="metadata" src="assets/copperstone-preview.mp4" aria-label="The Copperstone demo homepage, where a villa restores itself as you scroll"></video>
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/copperstone</span></div>
+        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_copperstone.jpg" src="assets/copperstone-scroll.mp4" aria-label="Scrolling through the Copperstone website, where the villa restores itself as you scroll"></video>
       </div>
       <div class="body">
         <div class="tag">Demo build · Villa maintenance</div>
@@ -174,7 +212,8 @@
     <!-- SWAP: confirm client permission before this page is used in ads or shared beyond warm contacts (vault rule: no client names in public copy without a ping) -->
     <div class="card">
       <div class="media">
-        <div class="pan"><img src="assets/redrose-pan.jpg" alt="The Red-Rose Talent Partners homepage, scrolling"></div>
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/redrose</span></div>
+        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_redrose.jpg" src="assets/redrose-scroll.mp4" aria-label="Scrolling through the Red-Rose Talent Partners website as its skyline turns from day to night"></video>
       </div>
       <div class="body">
         <div class="tag">Client build · Executive search, Dubai</div>
@@ -186,7 +225,8 @@
 
     <div class="card">
       <div class="media">
-        <video autoplay muted loop playsinline preload="metadata" src="assets/fairline-swing-preview.mp4" aria-label="The Fairline Media demo hero, a silhouetted golfer swinging at golden hour"></video>
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/fairlinemedia</span></div>
+        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_fairline.jpg" src="assets/fairline-scroll.mp4" aria-label="Scrolling through the Fairline Media website, where a golf swing plays frame by frame"></video>
       </div>
       <div class="body">
         <div class="tag">Demo build · Golf sponsorship</div>
@@ -265,9 +305,7 @@
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       var v = e.target.querySelector('video');
-      var p = e.target.querySelector('.pan img');
       if (v) { if (e.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); } }
-      if (p) { p.style.animationPlayState = e.isIntersecting ? 'running' : 'paused'; }
     });
   }, { rootMargin: '80px' });
   document.querySelectorAll('.card .media').forEach(function (m) { io.observe(m); });
