@@ -56,21 +56,14 @@
   /* hero */
   .hero{position:relative;overflow:hidden;padding:56px 0 84px;text-align:left}
   .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center}
-  .stack{position:relative;height:470px}
-  .shot{position:absolute;border-radius:12px;overflow:hidden;background:var(--bg-soft);border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.5)}
-  .shot img{width:100%;display:block}
-  .shot.s1{width:64%;top:0;left:0;transform:rotate(-3.5deg);z-index:1}
-  .shot.s2{width:58%;top:24%;right:0;transform:rotate(2.5deg);z-index:2}
-  .shot.s3{width:62%;bottom:0;left:7%;transform:rotate(-1.5deg);z-index:3}
+  .heroart video{width:100%;border-radius:26px;border:1px solid var(--line);display:block;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 110px rgba(139,108,255,.22)}
   .chrome{display:flex;align-items:center;gap:9px;height:34px;padding:0 12px;background:#0d0a1a;border-bottom:1px solid var(--line);flex-shrink:0}
   .dots{display:inline-flex;gap:6px}
   .dots i{width:9px;height:9px;border-radius:50%;background:#ff5f57}
   .dots i:nth-child(2){background:#febc2e}
   .dots i:nth-child(3){background:#28c840}
   .chrome .url{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:7px;padding:4px 11px;font-size:11px;color:var(--dim);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .shot .chrome{height:28px;padding:0 10px}
-  .shot .chrome .url{font-size:9.5px;padding:3px 9px}
-  .shot .dots i{width:7px;height:7px}
   .eyebrow{font-size:16px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:var(--lavender);margin-bottom:24px}
   .price-line{display:flex;align-items:baseline;gap:26px;flex-wrap:wrap}
   .was{font-family:"Clash Display",sans-serif;font-weight:600;font-size:clamp(2.4rem,6vw,4.4rem);color:var(--dim);position:relative}
@@ -138,8 +131,8 @@
     .card .media{min-height:280px}
     .steps{grid-template-columns:1fr}
     .ticks{grid-template-columns:1fr}
-    .hero-grid{grid-template-columns:1fr;gap:0}
-    .stack{display:none}
+    .hero-grid{grid-template-columns:1fr;gap:38px}
+    .heroart{max-width:440px;margin:0 auto}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
@@ -178,10 +171,8 @@
           <a class="btn ghost" href="#whatsapp">WhatsApp us</a>
         </div>
       </div>
-      <div class="stack" aria-hidden="true">
-        <div class="shot s1"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/fairlinemedia</span></div><img src="assets/thumb_fairline.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
-        <div class="shot s2"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/redrose</span></div><img src="assets/thumb_redrose.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
-        <div class="shot s3"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/copperstone</span></div><img src="assets/thumb_copperstone.jpg" alt="" width="820" height="512" loading="eager" decoding="async"></div>
+      <div class="heroart" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="metadata" poster="assets/hero-art-poster.jpg" src="assets/hero-art-loop.mp4"></video>
       </div>
     </div>
   </div>
