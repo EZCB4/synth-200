@@ -53,11 +53,16 @@
   .pill{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--lavender);
         border:1px solid rgba(139,108,255,.4);border-radius:999px;padding:7px 14px}
 
-  /* hero */
-  .hero{position:relative;overflow:hidden;padding:56px 0 84px;text-align:left}
-  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center}
-  .heroart video{width:100%;border-radius:26px;border:1px solid var(--line);display:block;
-    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 110px rgba(139,108,255,.22)}
+  /* cinematic top: the mascot loop is the hero */
+  .top{position:relative;overflow:hidden;background:var(--bg)}
+  .top-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 50%}
+  .top-scrim{position:absolute;inset:0;background:
+    linear-gradient(90deg, rgba(8,6,15,.9) 0%, rgba(8,6,15,.6) 36%, rgba(8,6,15,.08) 66%, rgba(8,6,15,.2) 100%),
+    linear-gradient(to top, #08060F, rgba(8,6,15,0) 24%),
+    linear-gradient(to bottom, rgba(8,6,15,.5), rgba(8,6,15,0) 16%)}
+  .top .bar,.top .hero{position:relative;z-index:2}
+  .hero{padding:64px 0 110px;text-align:left;min-height:min(84vh,840px);display:flex;align-items:center}
+  .hero>.wrap{width:100%}
   .chrome{display:flex;align-items:center;gap:9px;height:34px;padding:0 12px;background:#0d0a1a;border-bottom:1px solid var(--line);flex-shrink:0}
   .dots{display:inline-flex;gap:6px}
   .dots i{width:9px;height:9px;border-radius:50%;background:#ff5f57}
@@ -131,8 +136,11 @@
     .card .media{min-height:280px}
     .steps{grid-template-columns:1fr}
     .ticks{grid-template-columns:1fr}
-    .hero-grid{grid-template-columns:1fr;gap:38px}
-    .heroart{max-width:440px;margin:0 auto}
+    .hero{min-height:70vh;padding:48px 0 84px}
+    .top-bg{object-position:74% 50%}
+    .top-scrim{background:
+      linear-gradient(90deg, rgba(8,6,15,.9) 0%, rgba(8,6,15,.74) 52%, rgba(8,6,15,.44) 100%),
+      linear-gradient(to top, #08060F, rgba(8,6,15,0) 20%)}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
@@ -142,41 +150,37 @@
 </head>
 <body>
 
-<div class="wrap bar">
-  <div class="lockup">
-    <img src="assets/synth-mascot-head.png" alt="" width="38" height="38">
-    <span>The Synth Studio</span>
-  </div>
-  <div class="pill">August price</div>
-</div>
+<div class="top">
+  <video class="top-bg" autoplay muted loop playsinline preload="auto" poster="assets/hero-art-poster.jpg" src="assets/hero-art-loop.mp4" aria-hidden="true"></video>
+  <div class="top-scrim" aria-hidden="true"></div>
 
-<header class="hero">
-  <div class="glow" style="width:420px;height:420px;background:radial-gradient(closest-side, rgba(61,42,143,.85), transparent 72%);top:-140px;right:-100px"></div>
-  <div class="glow" style="width:300px;height:300px;background:radial-gradient(closest-side, rgba(29,47,110,.85), transparent 72%);bottom:-120px;left:-80px"></div>
-  <div class="wrap" style="position:relative">
-    <div class="hero-grid">
-      <div>
-        <div class="eyebrow">Website in a day</div>
-        <h1>The £200 website, built in one day</h1>
-        <div class="price-line" aria-hidden="true">
-          <span class="was">£2,400</span>
-          <span class="now">£200<span class="dot">.</span></span>
-        </div>
-        <p class="sub">Same website. One day. Live by tonight.</p>
-        <p class="note">Agencies quote thousands and take six weeks. We build your site in a single day, properly: designed for your trade, written for your customers, wired to your WhatsApp. <b>The £200 price ends in September.</b></p>
-        <div class="cta-row">
-          <!-- SWAP: replace #book with the live Cal.com booking link (prefill supported; see LAUNCH.md) -->
-          <a class="btn" href="#book">Book a 15 minute call</a>
-          <!-- SWAP: replace #whatsapp with the Synth WhatsApp wa.me link -->
-          <a class="btn ghost" href="#whatsapp">WhatsApp us</a>
-        </div>
+  <div class="wrap bar">
+    <div class="lockup">
+      <img src="assets/synth-mascot-head.png" alt="" width="38" height="38">
+      <span>The Synth Studio</span>
+    </div>
+    <div class="pill">August price</div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Website in a day</div>
+      <h1>The £200 website, built in one day</h1>
+      <div class="price-line" aria-hidden="true">
+        <span class="was">£2,400</span>
+        <span class="now">£200<span class="dot">.</span></span>
       </div>
-      <div class="heroart" aria-hidden="true">
-        <video autoplay muted loop playsinline preload="metadata" poster="assets/hero-art-poster.jpg" src="assets/hero-art-loop.mp4"></video>
+      <p class="sub">Same website. One day. Live by tonight.</p>
+      <p class="note">Agencies quote thousands and take six weeks. We build your site in a single day, properly: designed for your trade, written for your customers, wired to your WhatsApp. <b>The £200 price ends in September.</b></p>
+      <div class="cta-row">
+        <!-- SWAP: replace #book with the live Cal.com booking link (prefill supported; see LAUNCH.md) -->
+        <a class="btn" href="#book">Book a 15 minute call</a>
+        <!-- SWAP: replace #whatsapp with the Synth WhatsApp wa.me link -->
+        <a class="btn ghost" href="#whatsapp">WhatsApp us</a>
       </div>
     </div>
-  </div>
-</header>
+  </header>
+</div>
 
 <section>
   <div class="wrap">
