@@ -95,8 +95,20 @@
   /* cards */
   .card{display:grid;grid-template-columns:1.15fr 1fr;gap:0;background:var(--bg-soft);border:1px solid var(--line);
         border-radius:20px;overflow:hidden;margin-bottom:26px}
-  .card .media{display:flex;flex-direction:column;min-height:340px;background:#000}
-  .card .media video{width:100%;flex:1;min-height:0;object-fit:cover}
+  .card .media{position:relative;display:flex;flex-direction:column;min-height:340px;background:#000}
+  .card .media video{width:100%;flex:1;min-height:0;object-fit:cover;cursor:pointer}
+  .playbtn{position:absolute;left:50%;top:calc(50% + 17px);transform:translate(-50%,-50%);z-index:3;
+    display:inline-flex;align-items:center;gap:12px;border:1px solid rgba(201,188,255,.35);cursor:pointer;
+    border-radius:999px;padding:12px 24px 12px 13px;background:rgba(10,8,18,.74);color:#fff;
+    font-family:"General Sans",-apple-system,system-ui,sans-serif;font-weight:600;font-size:15px;
+    transition:transform .25s ease,box-shadow .25s ease,opacity .3s ease}
+  .playbtn:hover{transform:translate(-50%,-50%) translateY(-2px);box-shadow:0 14px 40px rgba(139,108,255,.35)}
+  .playbtn:focus-visible{outline:2px solid var(--lavender);outline-offset:3px}
+  .playbtn .ic{width:38px;height:38px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--violet),var(--blue));
+    display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 26px rgba(139,108,255,.55)}
+  .playbtn .ic svg{width:14px;height:14px;margin-left:2px;display:block}
+  .playbtn.hidden{opacity:0;pointer-events:none}
   .card .body{padding:38px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
   .tag{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--lavender)}
   .card h3{font-size:1.55rem}
@@ -192,7 +204,8 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/copperstone</span></div>
-        <video muted playsinline preload="none" poster="assets/thumb_copperstone.jpg" data-src="assets/copperstone-scrub-960.mp4" data-src-m="assets/copperstone-scrub-640.mp4" aria-label="Scrolling through the Copperstone website, where the villa restores itself as you scroll"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_copperstone.jpg" data-src="assets/copperstone-scroll.mp4" aria-label="A guided scroll through the Copperstone website, where the villa restores itself"></video>
+        <button class="playbtn" type="button" aria-label="Play the Copperstone site tour"><span class="ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="#fff"/></svg></span><span>Watch the tour</span></button>
       </div>
       <div class="body">
         <div class="tag">Concept build · Villa maintenance</div>
@@ -206,7 +219,8 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/redrose</span></div>
-        <video muted playsinline preload="none" poster="assets/thumb_redrose.jpg" data-src="assets/redrose-scrub-960.mp4" data-src-m="assets/redrose-scrub-640.mp4" aria-label="Scrolling through the Red-Rose Talent Partners website as its skyline turns from day to night"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_redrose.jpg" data-src="assets/redrose-scroll.mp4" aria-label="A guided scroll through the Red-Rose Talent Partners website as its skyline turns from day to night"></video>
+        <button class="playbtn" type="button" aria-label="Play the Red-Rose site tour"><span class="ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="#fff"/></svg></span><span>Watch the tour</span></button>
       </div>
       <div class="body">
         <div class="tag">Client build · Executive search, Dubai</div>
@@ -219,7 +233,8 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/fairlinemedia</span></div>
-        <video muted playsinline preload="none" poster="assets/thumb_fairline.jpg" data-src="assets/fairline-scrub-960.mp4" data-src-m="assets/fairline-scrub-640.mp4" aria-label="Scrolling through the Fairline Media website, where a golf swing plays frame by frame"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_fairline.jpg" data-src="assets/fairline-scroll.mp4" aria-label="A guided scroll through the Fairline Media website, where a golf swing plays frame by frame"></video>
+        <button class="playbtn" type="button" aria-label="Play the Fairline site tour"><span class="ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="#fff"/></svg></span><span>Watch the tour</span></button>
       </div>
       <div class="body">
         <div class="tag">Concept build · Golf sponsorship</div>
@@ -309,68 +324,38 @@
     var pp = bg.play(); if (pp && pp.catch) pp.catch(function () {});
   }
 
-  /* card showcases: scroll drives the site tours (the thesynthstudio.com/start
-     hero mechanic). All-intra encodes make currentTime seeks cheap both ways;
-     targets snap to the 12fps frame grid and an adaptive chase smooths pursuit.
-     Reduced motion and data saver keep the posters. */
-  var FPS = 12;
-  var players = [];
-  [].slice.call(document.querySelectorAll('.card .media video')).forEach(function (v) {
-    var src = narrow ? v.getAttribute('data-src-m') : v.getAttribute('data-src');
-    if (!src || reduced || lean || !('IntersectionObserver' in window)) return;
-    var st = { v: v, box: v.parentNode, dur: 0, cur: -1, seeking: false, near: false };
-    v.addEventListener('loadedmetadata', function () { st.dur = v.duration || 0; });
-    st.arm = function () {
-      if (!v.getAttribute('src')) { v.setAttribute('src', src); v.load(); }
+  /* card showcases: nothing plays on its own. The button fetches the tour on
+     first press and plays it through; tapping the video pauses and resumes;
+     the end resets to the start with the button back. */
+  [].slice.call(document.querySelectorAll('.card .media')).forEach(function (m) {
+    var v = m.querySelector('video');
+    var btn = m.querySelector('.playbtn');
+    if (!v || !btn) return;
+    var src = v.getAttribute('data-src');
+    if (!src) { btn.hidden = true; return; }
+    var label = btn.querySelector('span:last-child');
+    var idle = label.textContent;
+    var showBtn = function (t) { label.textContent = t || idle; btn.classList.remove('hidden'); };
+    var hideBtn = function () { btn.classList.add('hidden'); };
+    var start = function () {
+      if (!v.getAttribute('src')) { label.textContent = 'Loading'; v.setAttribute('src', src); v.load(); }
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { showBtn(); });
     };
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        st.near = e.isIntersecting;
-        if (e.isIntersecting) st.arm();
-      });
-    }, { rootMargin: '640px 0px' });
-    io.observe(v);
-    players.push(st);
+    v.addEventListener('playing', hideBtn);
+    v.addEventListener('waiting', function () { if (!v.paused) label.textContent = 'Loading'; });
+    v.addEventListener('pause', function () { if (!v.ended) showBtn(); });
+    v.addEventListener('ended', function () { v.currentTime = 0; showBtn(); });
+    v.addEventListener('error', function () { showBtn(); });
+    btn.addEventListener('click', start);
+    v.addEventListener('click', function () { if (v.paused) start(); else v.pause(); });
   });
 
-  /* IO backstop: any scroll re-checks proximity directly, so a missed
-     observer notification can never leave a card dead */
-  function proximity() {
-    for (var i = 0; i < players.length; i++) {
-      var st = players[i], r = st.box.getBoundingClientRect();
-      var near = r.bottom > -640 && r.top < innerHeight + 640;
-      if (near) { st.near = true; st.arm(); }
-      else if (r.bottom < -900 || r.top > innerHeight + 900) st.near = false;
-    }
-  }
-  if (players.length) {
-    addEventListener('scroll', proximity, { passive: true });
-    proximity();
-  }
-
-  if (players.length) {
-    (function tick() {
-      for (var i = 0; i < players.length; i++) {
-        var st = players[i];
-        if (!st.near || !st.dur) continue;
-        var r = st.box.getBoundingClientRect();
-        var p = clamp01((innerHeight - r.top) / (innerHeight + r.height));
-        var target = p * (st.dur - 1 / FPS);
-        if (st.cur < 0) st.cur = target;
-        var gap = target - st.cur;
-        st.cur += gap * (Math.abs(gap) > 0.18 ? 0.34 : 0.15);
-        var snapped = Math.round(st.cur * FPS) / FPS;
-        if (!st.seeking && Math.abs(st.v.currentTime - snapped) > 0.5 / FPS) {
-          st.seeking = true;
-          (function (s) {
-            s.v.addEventListener('seeked', function () { s.seeking = false; }, { once: true });
-            try { s.v.currentTime = snapped; } catch (e) { s.seeking = false; }
-          })(st);
-        }
-      }
-      requestAnimationFrame(tick);
-    })();
-  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) [].slice.call(document.querySelectorAll('.card .media video')).forEach(function (v) {
+      if (!v.paused) v.pause();
+    });
+  });
 })();
 </script>
 </body>
