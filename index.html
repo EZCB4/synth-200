@@ -151,7 +151,7 @@
 <body>
 
 <div class="top">
-  <video class="top-bg" autoplay muted loop playsinline preload="auto" poster="assets/hero-art-poster.jpg" src="assets/hero-art-loop.mp4" aria-hidden="true"></video>
+  <video class="top-bg" autoplay muted loop playsinline preload="none" poster="assets/hero-art-poster.jpg" data-src="assets/hero-art-loop.mp4" data-src-m="assets/hero-art-loop-m.mp4" aria-hidden="true"></video>
   <div class="top-scrim" aria-hidden="true"></div>
 
   <div class="wrap bar">
@@ -192,7 +192,7 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/copperstone</span></div>
-        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_copperstone.jpg" src="assets/copperstone-scroll.mp4" aria-label="Scrolling through the Copperstone website, where the villa restores itself as you scroll"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_copperstone.jpg" data-src="assets/copperstone-scrub-960.mp4" data-src-m="assets/copperstone-scrub-640.mp4" aria-label="Scrolling through the Copperstone website, where the villa restores itself as you scroll"></video>
       </div>
       <div class="body">
         <div class="tag">Concept build · Villa maintenance</div>
@@ -206,7 +206,7 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/redrose</span></div>
-        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_redrose.jpg" src="assets/redrose-scroll.mp4" aria-label="Scrolling through the Red-Rose Talent Partners website as its skyline turns from day to night"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_redrose.jpg" data-src="assets/redrose-scrub-960.mp4" data-src-m="assets/redrose-scrub-640.mp4" aria-label="Scrolling through the Red-Rose Talent Partners website as its skyline turns from day to night"></video>
       </div>
       <div class="body">
         <div class="tag">Client build · Executive search, Dubai</div>
@@ -219,7 +219,7 @@
     <div class="card">
       <div class="media">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">thesynthstudio.com/fairlinemedia</span></div>
-        <video autoplay muted loop playsinline preload="metadata" poster="assets/thumb_fairline.jpg" src="assets/fairline-scroll.mp4" aria-label="Scrolling through the Fairline Media website, where a golf swing plays frame by frame"></video>
+        <video muted playsinline preload="none" poster="assets/thumb_fairline.jpg" data-src="assets/fairline-scrub-960.mp4" data-src-m="assets/fairline-scrub-640.mp4" aria-label="Scrolling through the Fairline Media website, where a golf swing plays frame by frame"></video>
       </div>
       <div class="body">
         <div class="tag">Concept build · Golf sponsorship</div>
@@ -294,14 +294,83 @@
 
 <script>
 (function () {
-  if (!('IntersectionObserver' in window)) return;
-  var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) {
-      var v = e.target.querySelector('video');
-      if (v) { if (e.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); } }
-    });
-  }, { rootMargin: '80px' });
-  document.querySelectorAll('.card .media').forEach(function (m) { io.observe(m); });
+  'use strict';
+  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var conn = navigator.connection || {};
+  var lean = !!conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+  var narrow = matchMedia('(max-width: 767px)').matches;
+
+  /* ambient hero loop: pick the encode for the screen, skip on data saver */
+  var bg = document.querySelector('.top-bg');
+  if (bg && !lean && !reduced) {
+    bg.src = narrow ? bg.getAttribute('data-src-m') : bg.getAttribute('data-src');
+    bg.load();
+    var pp = bg.play(); if (pp && pp.catch) pp.catch(function () {});
+  }
+
+  /* card showcases: scroll drives the site tours (the thesynthstudio.com/start
+     hero mechanic). All-intra encodes make currentTime seeks cheap both ways;
+     targets snap to the 12fps frame grid and an adaptive chase smooths pursuit.
+     Reduced motion and data saver keep the posters. */
+  var FPS = 12;
+  var players = [];
+  [].slice.call(document.querySelectorAll('.card .media video')).forEach(function (v) {
+    var src = narrow ? v.getAttribute('data-src-m') : v.getAttribute('data-src');
+    if (!src || reduced || lean || !('IntersectionObserver' in window)) return;
+    var st = { v: v, box: v.parentNode, dur: 0, cur: -1, seeking: false, near: false };
+    v.addEventListener('loadedmetadata', function () { st.dur = v.duration || 0; });
+    st.arm = function () {
+      if (!v.getAttribute('src')) { v.setAttribute('src', src); v.load(); }
+    };
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        st.near = e.isIntersecting;
+        if (e.isIntersecting) st.arm();
+      });
+    }, { rootMargin: '640px 0px' });
+    io.observe(v);
+    players.push(st);
+  });
+
+  /* IO backstop: any scroll re-checks proximity directly, so a missed
+     observer notification can never leave a card dead */
+  function proximity() {
+    for (var i = 0; i < players.length; i++) {
+      var st = players[i], r = st.box.getBoundingClientRect();
+      var near = r.bottom > -640 && r.top < innerHeight + 640;
+      if (near) { st.near = true; st.arm(); }
+      else if (r.bottom < -900 || r.top > innerHeight + 900) st.near = false;
+    }
+  }
+  if (players.length) {
+    addEventListener('scroll', proximity, { passive: true });
+    proximity();
+  }
+
+  if (players.length) {
+    (function tick() {
+      for (var i = 0; i < players.length; i++) {
+        var st = players[i];
+        if (!st.near || !st.dur) continue;
+        var r = st.box.getBoundingClientRect();
+        var p = clamp01((innerHeight - r.top) / (innerHeight + r.height));
+        var target = p * (st.dur - 1 / FPS);
+        if (st.cur < 0) st.cur = target;
+        var gap = target - st.cur;
+        st.cur += gap * (Math.abs(gap) > 0.18 ? 0.34 : 0.15);
+        var snapped = Math.round(st.cur * FPS) / FPS;
+        if (!st.seeking && Math.abs(st.v.currentTime - snapped) > 0.5 / FPS) {
+          st.seeking = true;
+          (function (s) {
+            s.v.addEventListener('seeked', function () { s.seeking = false; }, { once: true });
+            try { s.v.currentTime = snapped; } catch (e) { s.seeking = false; }
+          })(st);
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  }
 })();
 </script>
 </body>
